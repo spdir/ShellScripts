@@ -1,4 +1,4 @@
-#用户自定义：如有修改，请修改各脚本的初始化变量部分
+#用户自定义：如非使用提供的默认软件包，请根据实际情况自行修改各文件中的初始化变量部分的参数
 #apache安装和mysql安装可单独使用对应文件
 #LAMP的部署需要依赖Apache_install.sh和Mysql_install.sh脚本
 #default_LAMP_package_address='http://oogg551mj.bkt.clouddn.com/LAMP.tar'
