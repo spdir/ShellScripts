@@ -1,5 +1,5 @@
 #! /bin/bash
-#__Auther__="ZhiChao Ma"
+#__Author__="ZhiChao Ma"
 #Apache服务安装
 #######################[初始化变量]#######################
 #Apache源码包的名称

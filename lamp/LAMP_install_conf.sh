@@ -1,5 +1,5 @@
 #!/bin/bash
-#__Auther__="ZhiChao Ma"
+#__Author__="ZhiChao Ma"
 #LAMP环境搭建
 
 #安装Apache服务
@@ -23,9 +23,6 @@ php_install_dir='/usr/lcoal/php'
 #phpMyAdmin源码包的名称
 phpMyAdmin_package_name='phpMyAdmin-4.2.5-all-languages.tar.gz'
 phpMyAdmin_code_package_dir='phpMyAdmin-4.2.5-all-languages'
-#依赖包文件名称
-subjoin_package_file1='zlib-devel-1.2.3-29.el6.x86_64.rpm'
-subjoin_package_file2='libxml2-devel-2.7.6-14.el6.x86_64.rpm'
 #扩展工具包
 libmcrypt_package='libmcrypt-2.5.8.tar.gz'
 libmcrypt_dir='libmcrypt-2.5.8'
@@ -36,19 +33,33 @@ mcrypt_dir='mcrypt-2.6.8'
 #ZendGuardLoader优化模块
 ZendGuardLoader_package='ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz'
 ZendGuardLoader_package_dir='ZendGuardLoader-php-5.3-linux-glibc23-x86_64'
+#安装依赖包的方式rpm(脚本当前目录下需要存在所需的包文件)/yum(需要配置本地yum源,或网络yum源)
+install_way='rpm'
+#依赖包文件名称
+subjoin_package_file1='zlib-devel-1.2.3-29.el6.x86_64.rpm'
+subjoin_package_file2='libxml2-devel-2.7.6-14.el6.x86_64.rpm'
 ###########################[END]#################################
 
-#检查依赖包
+#检查依赖包并且安装
 rpm -q zlib-devel &> /dev/null
 if [ $? -ne 0 ]
 then
-    rpm -ivh $subjoin_package_file1 --nodeps &> /dev/null
+	if [ $install_way = 'rpm' ]
+		then
+    		rpm -ivh $subjoin_package_file1 --nodeps &> /dev/null
+    	else
+    		yum -y install zlib-devel &> /dev/null
+    	fi
 fi
-
 rpm -q libxml2-devel &> /dev/null
 if [ $? -ne 0 ]
 then
-    rpm -ivh $subjoin_package_file2 --nodeps &> /dev/null
+	if [ $install_way = 'rpm' ]
+	then
+    	rpm -ivh $subjoin_package_file2 --nodeps &> /dev/null
+    else
+    	yum -y install libxml2-devel &> /dev/null
+    fi
 fi
 #卸载rpm方式安装的php包
 rpm -e {php,php-cli,php-ldap,php-common,php-mysql} --nodeps &> /dev/null
