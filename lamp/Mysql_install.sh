@@ -17,10 +17,7 @@ cmake_pachage_dir='cmake-2.8.6'
 #源码包解压存放路径
 code_package_dir='/usr/src/'
 #安装依赖包的方式rpm(脚本当前目录下需要存在所需的包文件)/yum(需要配置本地yum源,或网络yum源)
-<<<<<<< HEAD
 install_way='rpm'
-=======
->>>>>>> df3500a537a65e89f1f8f7accad61e7b7ad94378
 #依赖包的文件名称
 subjoin_package_file='ncurses-devel-5.7-3.20090208.el6.x86_64.rpm'
 ###########################[END]############################
