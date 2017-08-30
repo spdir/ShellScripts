@@ -60,6 +60,12 @@ chkconfig --add mysqld
 chkconfig mysqld on
 #初始化mysql
 $mysql_install/scripts/mysql_install_db --user=mysql --basedir=$mysql_install --datadir=${mysql_install}/data/ &> /dev/null
-
-service mysqld start &> /dev/null
-echo 'mysql install successful'
+if [ $? eq 0 ]
+	then
+		echo "mysql init successful"
+		service mysqld start &> /dev/null
+		echo 'mysql install successful'
+	else
+		echo "mysql init fail"
+		exit 0
+fi
