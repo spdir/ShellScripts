@@ -1,7 +1,7 @@
 #!/bin/bash
 #chkconfig: - 99 20
 #description: Nginx Service Control Script
-
+#Author:ZhiChaoMa 2017-9-20
 PROG="/usr/local/nginx/sbin/nginx"      #主程序路径
 PIDF="/usr/local/nginx/logs/nginx.pid"  #PID存放路径
 
