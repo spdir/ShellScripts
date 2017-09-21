@@ -1,8 +1,10 @@
 #!/bin/bash
-# chkconfig: 2345 90 25     #可以使用-，-的意思是所有运行级别
-# config: /etc/squid.conf
-# pidfile: /usr/local/squid/var/run/squid.pid  
-# Description: Squid - Internet Object Cache
+#chkconfig: 2345 90 25     #可以使用-，-的意思是所有运行级别
+#description: Squid - Internet Object Cache
+#Author:ZhiChaoMa
+#config: /etc/squid.conf
+#pidfile: /usr/local/squid/var/run/squid.pid  
+
 
 PID="/usr/local/squid/var/run/squid.pid"   #程序运行才会有pid文件，反之则无 
 CONF="/etc/squid.conf"
