@@ -53,6 +53,7 @@ make install &> /dev/null
 userdel mysql &> /dev/null
 useradd -M -s /sbin/nologin mysql &> /dev/null
 chown -R mysql:mysql  $mysql_install &> /dev/null
+rm -rf /etc/my.cnf
 cp -f ${mysql_install}/support-files/my-medium.cnf /etc/my.cnf
 ln -s ${mysql_install}/bin/* /usr/local/bin/
 cp ${mysql_install}/support-files/mysql.server /etc/rc.d/init.d/mysqld
