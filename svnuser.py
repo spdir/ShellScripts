@@ -6,6 +6,8 @@ _AUTHZ_FILE='authz'
 _PASSWD_FILE='passwd'
 #SVN server root dir(FULL PATH)
 _SVN_ROOT_DIR = ''
+#listen ipaddress
+_SVN_LISTEN_IP = ''
 
 
 """Configuration file parser.
@@ -3104,6 +3106,7 @@ class ArgumentParser(_AttributeHolder, _ActionsContainer):
         self.print_usage(_sys.stderr)
         self.exit(2, _('%s: error: %s\n') % (self.prog, message))
 
+##---------------Now Start -----------------##
 parser = ArgumentParser(usage='command -o [add|del] -g groupname -u username')
 def getparser():
   parser.add_argument('-o','--option',action='store',dest='option',required=True,help='[add|del] option')
@@ -3203,4 +3206,4 @@ if __name__ == '__main__':
   else:
     exit('command -o [add|del] -g groupname -u username OR command -h/--help')
   os.system("kill `ps aux | grep svn | awk -F ' ' '{ print $2 }' | head -n 1`")
-  os.system("svnserve -d -r %s" %(_SVN_ROOT_DIR))
+  os.system("svnserve -d -r %s --listen-host %s" %(_SVN_ROOT_DIR, _SVN_LISTEN_IP))
