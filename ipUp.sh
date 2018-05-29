@@ -16,6 +16,6 @@ for i in {2..255};do
   let  d=$[$d+1]
  fi
 done
-  
+
 echo "UP links = $u"
 echo "DOWN links = $d"
