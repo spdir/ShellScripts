@@ -2,6 +2,8 @@
 # zookeeper 集群安装脚本，三台配置一样，将脚本放在三台机器上进行运行即可
 #zookeeper install dir >> /usr/local/zookeeper-3.4.9
 #data dir >> /data/zookeeper/data
+#hostnam: App-a App-b App-c
+hostname=''
 
 iptables -F && iptables-save
 yum -y install wget net-tools
@@ -24,6 +26,9 @@ server.3=192.168.12.224:2888:3888
 " > /usr/local/zookeeper-3.4.9/conf/zoo.cfg
 #创建id编号
 HOSTNAME=`hostname`
+if [ hostnam != '' ]; then
+	HOSTNAME=${hostname}
+fi
 if [ $HOSTNAME = "App-a" ]; then
 	echo 1 > /data/zookeeper/data/myid
 elif [ $HOSTNAME = "App-b" ]; then

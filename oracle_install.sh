@@ -59,36 +59,37 @@ export ORACLE_HOSTNAME=DB
 export ORACLE_UNQNAME=oriepay
 export ORACLE_BASE=/data/app/oracle
 export ORACLE_HOME=$ORACLE_BASE/product/12.2.0/db_1
-export ORACLE_SID= oriepay
+export ORACLE_SID=oriepay
 export PATH=/usr/sbin:$PATH
 export PATH=$ORACLE_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
 export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
-' >> /home/oracle/.bash_profile && source /home/oracle/.bash_profile
+' >> /home/oracle/.bash_profile && bash /home/oracle/.bash_profile
 
 unzip /tmp/linuxx64_12201_database.zip -d /tmp
 chown -R oracle:oinstall /tmp/database
 mkdir /home/oracle/response && cd /home/oracle/response
 wget https://gitee.com/spdir/ConfigFile/raw/master/Config/Oracle/db_install.rsp
 wget https://gitee.com/spdir/ConfigFile/raw/master/Config/Oracle/dbca_single.rsp
-wget https://gitee.com/spdir/ConfigFile/blob/master/Config/Oracle/netca.rsp
+cp /tmp/database/response/netca.rsp /home/oracle/response/netca.rsp
 chown -R oracle:oinstall /home/oracle/response
 
-#su - oracle -c "/tmp/database/runInstaller -force -silent -noconfig -responseFile /home/oracle/response/db_install.rsp" 1> /tmp/oracle.out && echo -e "\033[42;31moracle starting\033[0m" && cat /tmp/oracle.out
-#while true; do
-# #  if [ $? == 0 ];then
-#     source `cat /tmp/oracle.out  | grep sh | awk -F ' ' '{print $2}' | head -1`
-#     source `cat /tmp/oracle.out  | grep sh | awk -F ' ' '{print $2}' | tail -1`
-#     su - oracle -c "netca /silent /responsefile /home/oracle/response/netca.rsp"
-#     netstat -anptu | grep 1521
-#     if [ $? != 0 ];then
-#       su - oracle -c "lsnrctl start"
-#       if [ $? != 0 ];then
-#         exit
-#       fi
-#     fi
-#     #此安装过程会输入三次密码，超级管理员，管理员，库(这些密码也可以在配置文件中写)
-#     su - oracle -c "dbca -silent -createDatabase  -responseFile dbca_single.rsp"
-#     exit
-#   fi
-# done
+su - oracle -c "/tmp/database/runInstaller -force -silent -noconfig -responseFile /home/oracle/response/db_install.rsp" 1> /tmp/oracle.out && echo -e "\033[42;31moracle starting\033[0m"
+while true; do
+   cat /tmp/oracle.out  | grep sh
+   if [ $? == 0 ];then
+     `cat /tmp/oracle.out  | grep sh | awk -F ' ' '{print $2}' | head -1` && \
+	  echo -e "\033[31mScript 1 run ok\033[0m"
+     `cat /tmp/oracle.out  | grep sh | awk -F ' ' '{print $2}' | tail -1` && \
+	  echo -e "\033[31mScript 2 run ok\033[0m"
+      su - oracle -c "netca /silent /responsefile /home/oracle/response/netca.rsp"
+      netstat -anptu | grep 1521
+	  if [ $? != 0 ]; then
+	    echo -e "\033[31mOracle no run listen\033[0m"
+	    exit
+      fi
+       #此安装过程会输入三次密码，超级管理员，管理员，库(这些密码也可以在配置文件中写)
+       su - oracle -c "dbca -silent -createDatabase  -responseFile /home/oracle/response/dbca_single.rsp"
+       exit
+   fi
+done
