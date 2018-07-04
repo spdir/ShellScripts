@@ -1,13 +1,26 @@
-#!/bin/#!/usr/bin/env bash
+#!/usr/bin/env bash
+#运行此脚本之前，需要先安装JDK
 # zookeeper 集群安装脚本，三台配置一样，将脚本放在三台机器上进行运行即可
 #zookeeper install dir >> /usr/local/zookeeper-3.4.9
 #data dir >> /data/zookeeper/data
+APP_A_IP=''
+APP_B_IP=''
+APP_C_IP=''
 #hostnam: App-a App-b App-c
 hostname=''
-
+#---------------------------------------------------------------------------------#
+java -version &>  /dev/null
+if [ $? != 0 ]; then
+  echo -e "\033[31mPlease install JDK first\033[0m"
+  exit
+fi
 iptables -F && iptables-save
-yum -y install wget net-tools
-wget http://192.168.1.118/zookeeper-3.4.9.tar.gz	#这里是自己开的端口，需要自行更换
+source /etc/profile
+yum -y install wget net-tools epel-release
+#可以将软件包上传到和脚本同一目录，因为下载速度很慢，建议拖动软件包
+if [ ! -f "`pwd`/zookeeper-3.4.9.tar.gz" ]; then
+  wget http://www.hefupal.com:8082/software/zookeeper-3.4.9.tar.gz --http-user=software --http-passwd=hefupal.software
+fi
 tar zxf zookeeper-3.4.9.tar.gz -C /usr/local
 #创建zookeeper data存放目录
 mkdir -p /data/zookeeper/data
@@ -20,20 +33,20 @@ autopurge.snapRetainCount=500
 autopurge.purgeInterval=24
 dataDir=/data/zookeeper/data
 dataLogDir=/data/zookeeper/logs
-server.1=192.168.1.222:2888:3888
-server.2=192.168.1.223:2888:3888
-server.3=192.168.12.224:2888:3888
+server.1=${APP_A_IP}:2888:3888
+server.2=${APP_B_IP}:2888:3888
+server.3=${APP_C_IP}:2888:3888
 " > /usr/local/zookeeper-3.4.9/conf/zoo.cfg
 #创建id编号
 HOSTNAME=`hostname`
 if [ hostnam != '' ]; then
 	HOSTNAME=${hostname}
 fi
-if [ $HOSTNAME = "App-a" ]; then
+if [ $HOSTNAME == "App-a" ]; then
 	echo 1 > /data/zookeeper/data/myid
-elif [ $HOSTNAME = "App-b" ]; then
+elif [ $HOSTNAME == "App-b" ]; then
 	echo 2 > /data/zookeeper/data/myid
-elif [ $HOSTNAME = "App-c" ]; then
+elif [ $HOSTNAME == "App-c" ]; then
 	echo 3 > /data/zookeeper/data/myid
 fi
 

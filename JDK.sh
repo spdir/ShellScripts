@@ -1,6 +1,9 @@
 #!/bin/bash
 #安装JDK
-wget http://192.168.1.118/jdk1.7.0_80.tgz
+if [ ! -f "`pwd`/jdk1.7.0_80.tgz" ]; then
+  wget http://www.hefupal.com:8082/software/jdk1.7.0_80.tgz --http-user=software --http-passwd=hefupal.software
+fi
+yum remove *openjdk*
 tar zxf jdk1.7.0_80.tgz -C /usr/local
 echo 'export JAVA_HOME=/usr/local/jdk1.7.0_80
 export JAVA_BIN=$JAVA_HOME/bin

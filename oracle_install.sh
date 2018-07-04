@@ -3,12 +3,12 @@
 #主机的内网地址
 HostIP=""
 OracleUserPasswd=""
-
-
-yum install -y binutils compat-libcap1 compat-libstdc++-33 compat-libstdc++-33.i686 glibc glibc.i686 glibc-devel glibc-devel.i686 ksh libaio libaio.i686 libaio-devel libaio-devel.i686 libX11 libX11.i686 libXau libXau.i686 libXi libXi.i686 libXtst libXtst.i686 libgcc libgcc.i686 libstdc++ libstdc++.i686 libstdc++-devel libstdc++-devel.i686 libxcb libxcb.i686 make nfs-utils net-tools smartmontools sysstat unixODBC unixODBC-devel gcc gcc-c++ libXext libXext.i686 zlib-devel zlib-devel.i686 unzip wget vim
+ORACLE_DB_PASSWD=""
+#---------------------------------------------------------------------------------#
+yum install -y binutils compat-libcap1 compat-libstdc++-33 compat-libstdc++-33.i686 glibc glibc.i686 glibc-devel glibc-devel.i686 ksh libaio libaio.i686 libaio-devel libaio-devel.i686 libX11 libX11.i686 libXau libXau.i686 libXi libXi.i686 libXtst libXtst.i686 libgcc libgcc.i686 libstdc++ libstdc++.i686 libstdc++-devel libstdc++-devel.i686 libxcb libxcb.i686 make nfs-utils net-tools smartmontools sysstat unixODBC unixODBC-devel gcc gcc-c++ libXext libXext.i686 zlib-devel zlib-devel.i686 unzip wget vim epel-release
 #config hosts
 echo "${HostIP}  DB" >> /etc/hosts
-sed -i 's/SELINUX=enforcing/SELINUX=disabled/g'
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 setenforce 0
 systemctl stop firewalld && systemctl disable firewalld
 groupadd oinstall && groupadd dba && groupadd oper && useradd -g oinstall -G dba,oper oracle && echo "$OracleUserPasswd" | passwd oracle --stdin
@@ -66,11 +66,17 @@ export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
 export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
 ' >> /home/oracle/.bash_profile && bash /home/oracle/.bash_profile
 
+if [ ! -f "/tmp/linuxx64_12201_database.zip" ]; then
+  wget http://www.hefupal.com:8082/software/linuxx64_12201_database.zip --http-user=software --http-passwd=hefupal.software -O /tmp/linuxx64_12201_database.zip
+fi
 unzip /tmp/linuxx64_12201_database.zip -d /tmp
 chown -R oracle:oinstall /tmp/database
 mkdir /home/oracle/response && cd /home/oracle/response
-wget https://gitee.com/spdir/ConfigFile/raw/master/Config/Oracle/db_install.rsp
-wget https://gitee.com/spdir/ConfigFile/raw/master/Config/Oracle/dbca_single.rsp
+wget http://www.hefupal.com:8082/config/oracle/db_install.rsp --http-user=software --http-passwd=hefupal.software
+wget http://www.hefupal.com:8082/config/oracle/dbca_single.rsp --http-user=software --http-passwd=hefupal.software
+if [ ${ORACLE_DB_PASSWD} != "" ];then
+  sed -i "s/systemOracle.com/${ORACLE_DB_PASSWD}/g" dbca_single.rsp
+fi 
 cp /tmp/database/response/netca.rsp /home/oracle/response/netca.rsp
 chown -R oracle:oinstall /home/oracle/response
 
@@ -90,6 +96,7 @@ while true; do
       fi
        #此安装过程会输入三次密码，超级管理员，管理员，库(这些密码也可以在配置文件中写)
        su - oracle -c "dbca -silent -createDatabase  -responseFile /home/oracle/response/dbca_single.rsp"
+	   mkdir -p /data/app/oracle/oradata/oriepay/
        exit
    fi
 done
