@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#crond: 1 0 * * * source /data/pay/catalina_split.sh >> /tmp/bak.log
+#crond: 59 23 * * * source /data/pay/catalina_split.sh >> /tmp/bak.log
 
 function split() {
     TOMCAT_LOG_DIR=$1
@@ -9,7 +9,7 @@ function split() {
 }
 
 tomcat_path_array=(
-/data/pay/tomcat-auto-8095/logs
+/../tomcat/logs
 ......
 )
 

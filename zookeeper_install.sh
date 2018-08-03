@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #运行此脚本之前，需要先安装JDK
-# zookeeper 集群安装脚本，三台配置一样，将脚本放在三台机器上进行运行即可
+#zookeeper 集群安装脚本，三台配置一样，将脚本放在三台机器上进行运行即可
 #zookeeper install dir >> /usr/local/zookeeper-3.4.9
 #data dir >> /data/zookeeper/data
 APP_A_IP=''

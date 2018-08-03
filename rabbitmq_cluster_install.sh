@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 #CentOS 7
-#config RabbitMQ node type(master/slave)
-nodeType="master"
+#config RabbitMQ node type(m/s)
+nodeType="m"
 #config rabbitmq host
 Master_ip=""
 Slave_ip=""
+Master_hostname=""
+Slave_hostname=""
 #config rabbitmq username/password
 RabbitMQ_UserName=""
 RabbitMQ_Password=""
@@ -29,8 +31,8 @@ if [ $? != 0 ];then
   exit
 fi
 echo "
-${Master_ip}    Middle-a
-${Slave_ip}     Middle-b
+${Master_ip}    ${Master_hostname}
+${Slave_ip}     ${Slave_hostname}
 " >> /etc/hosts
 yum -y localinstall rabbitmq-server-3.7.4-1.el7.noarch.rpm
 systemctl start rabbitmq-server && systemctl enable rabbitmq-server
@@ -39,7 +41,7 @@ if [ $? != 0 ]; then
 	echo -e "\033[31mRabbitMQ Server start filed\033[0m"
 	exit
 fi
-if [ $nodeType == 'master' ];then
+if [ $nodeType == 'm' ];then
   systemctl restart rabbitmq-server
   rabbitmqctl stop_app && rabbitmqctl reset && rabbitmqctl start_app
   rabbitmqctl add_user ${RabbitMQ_UserName} ${RabbitMQ_Password} && rabbitmqctl set_user_tags ${RabbitMQ_UserName} administrator
@@ -49,12 +51,12 @@ if [ $nodeType == 'master' ];then
   rabbitmqctl set_policy -p pay ha-all '^' '{"ha-mode":"all"}'
   rabbitmqctl set_permissions -p / admin  ".*" ".*" ".*"
   rabbitmqctl set_permissions -p pay admin  ".*" ".*" ".*"
-elif [ $nodeType == 'slave' ];then
+elif [ $nodeType == 's' ];then
   systemctl restart rabbitmq-server
   sleep 100
   rabbitmqctl stop_app
   rabbitmqctl reset
-  rabbitmqctl join_cluster rabbit@Middle-a
+  rabbitmqctl join_cluster --ram rabbit@${Master_hostname}
   rabbitmqctl start_app
 fi
 netstat -anptu | grep 15672 && netstat -anptu | grep 5672
