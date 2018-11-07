@@ -12,7 +12,7 @@ cd /home/oracle/FullAmount_backup/
 _NOW_TIME=`date "+%Y-%m-%d"`
 #读取最后一次备份的时间
 _LAST_HISTORT_TIME=`cat /home/oracle/FullAmount_backup/lastHistory.txt`
-#备份demo库
+#备份demo scheams
 expdp system/system123@orcl schemas=demo directory=FULLAMOUNT_BACKUP dumpfile=demo-${_NOW_TIME}.dmp logfile=demo-${_NOW_TIME}.log
 
 #对最新备份的数据进行打包
