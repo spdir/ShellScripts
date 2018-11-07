@@ -25,7 +25,7 @@ enabled=1
 yum clean all && yum makecache
 yum -y install erlang socat epel-release
 if [ ! -f "`pwd`/rabbitmq-server-3.7.4-1.el7.noarch.rpm" ]; then
-  wget http://www.hefupal.com:8082/software/rabbitmq-server-3.7.4-1.el7.noarch.rpm --http-user=software --http-passwd=hefupal.software
+  exit
 fi
 if [ $? != 0 ];then
   exit
