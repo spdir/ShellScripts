@@ -19,7 +19,7 @@ source /etc/profile
 yum -y install wget net-tools epel-release
 #可以将软件包上传到和脚本同一目录，因为下载速度很慢，建议拖动软件包
 if [ ! -f "`pwd`/zookeeper-3.4.9.tar.gz" ]; then
-  wget http://www.hefupal.com:8082/software/zookeeper-3.4.9.tar.gz --http-user=software --http-passwd=hefupal.software
+  exit
 fi
 tar zxf zookeeper-3.4.9.tar.gz -C /usr/local
 #创建zookeeper data存放目录
